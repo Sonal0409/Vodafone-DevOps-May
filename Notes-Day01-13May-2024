@@ -181,6 +181,14 @@ Revert command in GIT
 
 # git revert <deletioncommitid>
 
+nano editor will open
+
+insert some message
+
+save the file:
+
+press CTRL x --> press y and enter key
+
 =========================================================
 Git Branching and Merging
 =======================================================
