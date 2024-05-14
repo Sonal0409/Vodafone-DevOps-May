@@ -1,0 +1,226 @@
+GITHUB:
+
+==================================================
+
+Login to github.com
+
+============================
+
+
+Personal access tokens (classic) function like ordinary OAuth access tokens. They can be used instead of a github password for Git over HTTPS, or can be used to authenticate to the API over Basic Authentication.
+
+1. Create a personal access token:
+
+ > clcik on user menu which is on the extreme right
+ > click on settings in that
+ > scroll down, on left side you will see developer settings -- click on it
+ > on left side 3 rd option --> personla Access token
+ > select tokens(classic)
+ > click on generate new token --> click on generate new token classic
+ > in note --give token name as token19
+ > expiration --> leave as is
+ > select scopes --> clcik on repo checkbox
+ > scroll down and clcik on generate token
+ > the generated token need to be copied safely
+
+Make sure to copy your personal access token now. You won’t be able to see it again!
+
+token:
+
+
+
+
+
+2. Create a remote repository
+
+3. Connect local repo to remote repo
+
+# git checkout master
+
+# git remote add origin https://github.com/Sonal0409/myproject19Apr.git
+
+# git remote -v 
+
+Remove origin if needed
+
+# git remote rm origin
+
+
+Push data from local to remote
+
+# git push origin master
+
+username : github
+password: token
+
+================================
+
+Create a file in github on master branch and pull the file to merge in local repoisotry master branch
+
+
+Once file is create don master branch of remote repo
+
+go to local repo
+
+# git checkout master
+
+# git pull origin master
+
+pull will fecth changes and merge them with LR and WD
+
+================================
+
+
+Clone a remote repository to local machine
+
+# git clone https://github.com/Sonal0409/myproject19Apr.git
+
+Forking - complete
+===========================================
+
+
+Continous Integration With Jenkins
+===========================================
+
+Demo 1: Remove Current version of Jenkins from lab and upgrade to new version of jenkins
+
+sudo service jenkins stop
+
+sudo apt-get remove --purge jenkins
+
+sudo apt-get autoremove jenkins
+
+Install Jenkins:
+==============================
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+sudo apt-get update
+
+sudo apt-get install jenkins
+
+Go to browser:
+
+localhost:8080
+
+Go to the terminal and execute below command:
+
+cat /var/lib/jenkins/secrets/initialAdminPassword
+
+Select -> Install suggested Plugins
+
+Give the username as admin and password at admin
+
+You will be on the dashboard
+-----------------------------------------------------------------
+
+Create a freestyle job and integrate it with GITHUB repostitory
+
+Demo 1: Create a Jenkisn job that will clone a github repository in jenkins workspace
+
+Create a new job in jenkins
+Click on + sign to create new item/job/project
+Give a name to the job : CloneRepo
+Select freestyle project and click on OK button
+On the project click on Source code management
+Select git option
+Give git hub repo path
+https://github.com/Sonal0409/myproject05Aug
+
+Branch name as ===>  Master
+
+Save the job
+
+Click on Build now
+
+Repository will be cloned in jenkins workspace
+
+You can go to job → workspace folder to see the files
+
+
+Demo 2: Jenkins + maven integration:
+===========================
+
+Jenkins--> Manage Jenkins-->Global Tool configuration
+
+Under GIT==> leave it same 
+
+Under maven ==> lets install it automatically
+Type mymaven and check the install automatically box.
+Save the changes
+
+Job Package Job
+***************************
+
+Go to jenkins--> new item--> Name= Package==> freestyle project
+==> source codemanagement==>select git==> give git repo name https://github.com/Sonal0409/DevOpsClassCodes
+ 
+build ==> invoke top level maven target==>mymaven
+
+ goal = clean install package
+
+==> save==> build now
+==> click on build number and see the console
+
+==> go to workspace ==> target/addressbook.war
+
+================================
+
+Declarative Pipelines:
+
+1. Build Pipeline
+===============================================
+
+pipeline{
+  
+// all pipeline code will be written here
+// declarative   key 'value'
+tools{
+    // this section is not mandatory
+    maven 'mymaven'
+    
+}
+
+agent  any  // this section is mandatory, here any = current controller
+
+stages{
+    // here we will write the job names and stesp to be executed by jenkins
+    // we can create many stage, each stage is like a job it will have a unique name
+  
+  stage('Checkout Code')  
+    {
+        steps{
+            
+            git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+        }
+        
+    }
+    stage('Code Review')  
+    {
+        steps{
+            sh 'mvn pmd:pmd'
+        }
+        
+    }
+     stage('Code Test')  
+    {
+        steps{
+            sh 'mvn test'
+        }
+         post{
+            success{
+                junit stdioRetention: '', testResults: 'target/surefire-reports/*.xml'
+            }
+        }
+    }
+     stage('package')  
+    {
+        steps{
+            sh 'mvn package'
+        }
+        
+    }
+}
+    
+}
