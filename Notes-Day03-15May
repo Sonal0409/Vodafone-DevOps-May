@@ -1,3 +1,54 @@
 
 Click on New Item --> Give name of Job as CIpipelineCodev --> Select pipeline template project --> press ok
 
+Add the pipeline code:
+
+
+
+pipeline{
+    
+    agent any  // here 'any' means run the pipeline on current server
+    
+    tools{
+        maven 'mymaven'
+    }
+    
+    stages{
+        stage('Checkout Code'){
+            
+            steps{
+                git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+            }
+            
+        }
+        
+        stage('Compile Code'){
+            steps{
+                sh 'mvn compile'
+            }
+        }
+        
+         stage('Test Code'){
+            steps{
+                sh 'mvn test'
+            }
+            post{
+                success{
+                    junit stdioRetention: '', testResults: 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+        
+        stage('Build Code'){
+            
+            steps{
+                sh 'mvn package'
+            }
+        }
+        
+    }
+}
+
+
+Save the job and build it
+
