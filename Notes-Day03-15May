@@ -79,6 +79,70 @@ pipeline {
 
 Save the job and run
 
+Create a new Job --> prameterized Build --> select project as pipeline -->press ok --> add the below code
+
+pipeline{
+    
+    agent any
+    
+    tools{
+        maven 'mymaven'
+    }
+    
+    parameters{
+        // variables that will store a value
+        
+        choice(name:'ENV',choices: ["","Dev","QA"])
+    }
+    
+    stages{
+        
+        stage('Build for Dev Env'){
+            
+           when { expression {params.ENV == "Dev"} } 
+           steps{
+               git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+               sh 'mvn pmd:pmd'
+               sh 'mvn package'
+           }
+            
+        }
+        
+          stage('Build for QA Env'){
+            
+           when { expression {params.ENV == "QA"} } 
+           steps{
+               git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+               sh 'mvn test'
+               sh 'mvn package'
+           }
+            
+        }
+        
+        
+        }
+    }
+    
+    
+    
+
+
+Save the job and run  -> no stage will be exeucted
+
+refresh the page --> you will see the option Build with parameters
+
+Select the paramter value and build
+
+
+
+
+
+
+
+
+
+
+
 
 
 
