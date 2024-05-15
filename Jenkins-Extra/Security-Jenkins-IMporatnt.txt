@@ -1,0 +1,47 @@
+1. schedule build has not triggered due to disk space issue, How to resolve it?
+2.How to create a job for ear and log deletion?
+3.How to increase disk size?
+
+
+https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/best-practices/deleting-old-builds-best-strategy-for-cleanup-and-disk-space-management
+
+https://plugins.jenkins.io/disk-usage/
+
+https://linuxhint.com/jenkins-disk-space-cleanup/
+
+>  Use workspace cleanup plugin to cleanup the workspace as post build step.
+> Alternative1 - provision a new slave per job
+> Alternative2 - run the build inside a container. Everything will be discarded once the build is finished
+> Delete old build or other large size folder
+> You can go to Manage Nodes --> configure main node -->disk space
+> a cleanup job with the following build steps. You can schedule it @daily or @weekly.
+
+Execute system groovy script build step to clean up old jobs:
+    import jenkins.model.Jenkins
+    import hudson.model.Job
+
+    BUILDS_TO_KEEP = 5
+
+    for (job in Jenkins.instance.items) {
+      println job.name
+
+      def recent = job.builds.limit(BUILDS_TO_KEEP)
+
+      for (build in job.builds) {
+        if (!recent.contains(build)) {
+          println "Preparing to delete: " + build
+          build.delete()
+        }
+      }
+    }
+You'd need to have Groovy plugin installed.
+
+Execute shell build step to clean cache directories
+rm -r ~/.gradle/
+rm -r ~/.m2/
+
+echo "Disk space"
+du -h -s /
+
+> the disk space is generally cheap these days. masters can have hundreds of GB to avoid disk space issue.
+
