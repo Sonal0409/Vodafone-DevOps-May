@@ -134,7 +134,50 @@ refresh the page --> you will see the option Build with parameters
 Select the paramter value and build
 
 
+=================================
 
+Create a new job and run below code
+
+
+
+@Library('my-shared-library') _ 
+pipeline{
+    
+    agent any
+    
+    tools{
+        maven 'mymaven'
+    }
+    
+    stages{
+        
+        stage('checkout code')
+        
+        { 
+            steps{
+                
+            cloneRepo('https://github.com/Sonal0409/DevOpsCodeDemo.git')
+        }
+        
+        }
+        
+        stage('build Code')
+        {
+            steps{
+                build('Compile')
+            }
+        }
+        
+        stage('Check log'){
+            
+            steps{
+                filterLogs('WARNING',2)
+            }
+            
+        }
+    }
+    
+}
 
 
 
