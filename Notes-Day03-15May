@@ -52,3 +52,43 @@ pipeline{
 
 Save the job and build it
 
+Create a new jOb -> HandleError > select project as Pipeline > press ok > add below code
+
+pipeline {
+    agent any
+    stages {
+        stage('job1') {
+            steps {
+                sh 'mkdir sonal'
+            }
+        }
+        stage('job2') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh "mkdir sonal"
+                }
+            }
+        }
+        stage('job3') {
+            steps {
+                sh 'touch myfile'
+            }
+        }
+    }
+}
+
+Save the job and run
+
+
+
+
+
+
+
+
+
+
+
+
+
+
