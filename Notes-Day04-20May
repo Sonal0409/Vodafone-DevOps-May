@@ -89,6 +89,8 @@ Save the playbook.
 Vars_prompt Section:
 ==============================================
 
+# vim playbook2.yml
+
 - name: Install package and create file
   hosts: webserver
   become: true
@@ -104,6 +106,10 @@ Vars_prompt Section:
     package: name={{pkg_name}} state=present
   - name: Create a file on host server
     file: path={{path}} state=touch
+
+Save the playbook.
+
+# ansible-playbook playbook2.yml
 
 ==================================================================
 Deploy index.html code on Apache2 server
