@@ -31,7 +31,7 @@ Ad Hoc Commands in Ansible
 
 $ ansible webserver -m ping
 $ ansible webserver -m command -a "df -h"
-$ ansible webserver -m command -a “uptime”
+$ ansible webserver -m command -a "uptime"
 
 
 Playbooks:
