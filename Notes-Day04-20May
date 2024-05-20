@@ -1,0 +1,347 @@
+Check Ansible Installation:
+*****************************
+$ ansible --version
+
+Establish SSH connection controller machine and host machine:
+*************************
+Establish SSH key pair in linux system to have SSH connectivity with localhost using the following commands:
+
+$ ssh-keygen -t rsa (Press Enter when asked for File and Paraphrase details)
+
+$ cd
+
+$ cat .ssh/id_rsa.pub >> .ssh/authorized_keys
+
+[OR] when connecting with public server host
+
+$ ssh-copy-id -i username@ipHost
+
+Add the host ‘localhost’  in ansible host file:
+
+$ vim /etc/ansible/hosts
+
+
+[webserver]
+localhost:42006
+
+
+
+Ad Hoc Commands in Ansible
+
+
+$ ansible webserver -m ping
+$ ansible webserver -m command -a "df -h"
+$ ansible webserver -m command -a “uptime”
+
+
+Playbooks:
+==========================================
+
+# cd /etc/ansible
+
+# vim playbook1.yml
+
+- name: debug and register module
+  hosts: webserver
+  tasks:
+  - name: Print a message
+    debug: msg="Ansible Playbook Execution"
+  - name: Execute a command on the host server
+    command: hostname -s
+    register: hostname_output  # here we are creating a variable
+  - name: Show the output
+    debug: var=hostname_output.stdout
+
+Save the file (:wq!)
+
+Execute the playbook: 
+# ansible-playbook playbook1.yml --syntax-check
+# ansible-playbook playbook1.yml 
+
+
+=======================================
+
+Variables:
+
+# vim playbook2.yml
+
+---
+- name: Custom variables 
+  hosts: webserver
+  become: true  # become a root user in order to execute the tasks
+  become_user: root
+  # customize the playbook to run with different packages as required
+  vars:  # we write map, its not a list
+   pkg_name: php
+   pkg_state: present
+   file_path: /tmp/demo1.txt
+   file_state: touch
+  tasks:
+  - name: Install {{pkg_name}}  on hostserver
+    package: name={{pkg_name}} state={{pkg_state}}
+  - name: create a file on hostserver
+    file: path={{file_path}}  state={{file_state}}
+
+Save the playbook.
+
+# ansible-playbook playbook2.yml
+=============================================
+Vars_prompt Section:
+==============================================
+
+- name: Install package and create file
+  hosts: webserver
+  become: true
+  become_user: root
+  vars: # here we write the variables, scope is current playbook
+   path: /tmp/newfile.txt
+  vars_prompt:
+   - name: pkg_name
+     prompt: Enter the package name
+     private: false
+  tasks:
+  - name: Install {{pkg_name}} on the host server
+    package: name={{pkg_name}} state=present
+  - name: Create a file on host server
+    file: path={{path}} state=touch
+
+==================================================================
+Deploy index.html code on Apache2 server
+
+# vim index.html
+
+<h1> This file is form Ansible </h1>
+<h1> Created by Sonal </h1>
+
+Save the file
+
+# vim playbook_apache.yml
+
+
+- name: Deploy html Code file on Apache2
+  hosts: webserver
+  become: true
+  tasks:
+  - name: Install apache2 in host servers
+    package: name=apache2 state=present
+  - name: Start the apache server
+    service: name=apache2 state=started
+  - name: Copy a file on apache server
+    copy: src=index.html dest=/var/www/html
+  - name: Restart the apache2 server
+    service: name=apache2 state=restarted
+
+Save the file (:wq!)
+
+Execute the playbook:
+
+ansible-playbook playbook_apache.yml
+
+To check the deployment of the Page:
+Go tot he browser on the lab and give localhost:80
+
+===========================================
+Handlers: Theya re tasks which are executed only when notified.
+Only when the parent task status is "changed" the notify module will notify the hadler task for execution.
+handlers tasks will always run at the end, after all the tasks have been executed.
+
+# vim index.html
+
+Do some change and save the file 
+
+# vim playbook_apache.yml
+
+- name: Deploy html Code file on Apache2
+  hosts: webserver
+  become: true
+  tasks:
+  - name: Execute a command
+    command: hostname -s
+    notify: Execution command status
+  - name: Install apache2 in host servers
+    package: name=apache2 state=present
+  - name: Start the apache server
+    service: name=apache2 state=started
+  - name: Copy a file on apache server
+    copy: src=index.html dest=/var/www/html
+    notify: Restart the apache2 server
+  handlers: # in this section the tasks will be executed only when notified
+  - name: Restart the apache2 server
+    service: name=apache2 state=restarted
+  - name: Execution command status
+    debug: msg="Command executed successfully"
+
+
+# ansible-playbook playbook_apache.yml
+
+========================================
+Meta - flush handlers:
+
+- name: Deploy html Code file on Apache2
+  hosts: webserver
+  become: true
+  tasks:
+  - name: Execute a command
+    command: hostname -s
+    notify: Execution command status
+  - name: flush the notified handler
+    meta: flush_handlers
+  - name: Install apache2 in host servers
+    package: name=apache2 state=present
+  - name: Start the apache server
+    service: name=apache2 state=started
+  - name: Copy a file on apache server
+    copy: src=index.html dest=/var/www/html
+    notify: Restart the apache2 server
+  handlers: # in this section the tasks will be executed only when notified
+  - name: Restart the apache2 server
+    service: name=apache2 state=restarted
+  - name: Execution command status
+    debug: msg="Command executed successfully"
+
+===============================================
+When keyword to add conditions in the playbook.
+
+vim playbook_when.yml
+
+- name: Conditions in ansible
+  hosts: webserver
+  become: true
+  tasks:
+  - name: Install httpd package
+    package: name=httpd state=present
+    when: ansible_distribution != "Ubuntu"
+  - name: Install apchae2 package
+    package: name=apache2 state=present
+    when: ansible_distribution == "Ubuntu"
+  - name: execute a command
+    command: hostname -s
+    when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "8"
+
+==================================
+
+=================================================================
+Janja2 templating:
+==============================================================
+
+# vim webfile.j2
+
+# This is a jinja2 template
+
+This is an application configuration file
+Localtion of this file is /etc directory
+
+This file is created by {{author}}
+
+The host details are:
+
+Ip address : {{ansible_default_ipv4["address"]}}
+Host_NODE_NAME is : {{ansible_nodename}}
+Host_OS_FAMILY is {{ansible_os_family}}
+
+save the file (:wq!)
+
+Cretae a playbook to copy the template.
+
+vim playbook_jinja.yml
+
+- name: jinja2 templating in Ansible
+  hosts: webserver
+  become: true
+  vars:
+   author: Ansible
+  tasks:
+  - name: copy the configuration file
+    template: src=webfile.j2 dest=/etc/webfile.conf
+
+====================================================================
+
+tags in Ansible
+
+- hosts: webserver
+  become: true
+  tasks:
+  - name: Execute a command
+    command: hostname -a
+    tags: command
+  - name: execute the command2
+    command: echo "hello"
+    tags: command
+  - name: Install package
+    package: name=apache2 state=present
+    tags: install
+  - name: install package tree
+    package: name=tree state=present
+    tags: install
+  - name: create a  file
+    file: path=/tmp/file state=touch
+    tags: createfile
+  - name: remove a package
+    package: name=tree state=absent
+    tags: uninstall
+
+
+Save the file
+
+ ansible-playbook playbook_tags.yml --tags command
+
+   ansible-playbook playbook_tags.yml --tags command,install
+ 
+   ansible-playbook playbook_tags.yml --skip-tags uninstall
+
+   ansible-playbook playbook_tags.yml --list-tags
+
+
+   ansible-playbook playbook_tags.yml --tags tagged
+
+   ansible-playbook playbook_tags.yml --tags untagged
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Before we begin next playbook, lets look at Setup module and Fact variable:
+===========================================
+
+# ansible webserver -m setup
+It gives lot of information
+
+# ansible webserver -m setup | wc -l
+
+It will return total number of lines
+# ansible webserver -m setup -a "filter=ansible_memfree_mb"
+
+It will return value for given ansible variable.
+# ansible webserver -m setup -a "filter=ansible_mem*"
+
+
+# vim playbookfact.yml
+- hosts: webserver
+  tasks:
+  - name: Show Ipaddress of the host servers
+    debug:
+      msg="The ipaddress of host server  is {{ ansible_default_ipv4.address }}"
+  - name: print variable
+    debug: 
+     var=ansible_default_ipv4.address
