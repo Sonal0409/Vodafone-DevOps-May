@@ -1,0 +1,7 @@
+#!/bin/bash
+sudo yum update -y
+sudo yum install git -y
+sudo amazon-linux-extras install java-openjdk11 -y
+cd /tmp
+mkdir jenkinsdir
+chmod -R 777 /tmp/jenkinsdir
