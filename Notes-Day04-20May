@@ -112,6 +112,44 @@ Save the playbook.
 # ansible-playbook playbook2.yml
 
 ==================================================================
+variables in a file:
+================================================================
+# vim variables.yml
+
+  pkg_name: php
+
+   state: present
+
+   file_path: /tmp/demo1.txt
+
+   file_state: touch
+   password: user@123
+
+save the file
+
+
+# vim playbook3.yml
+
+---
+- hosts: webserver
+  become: true
+  become_user: root
+  vars_files:
+   - variables.yml
+  tasks:
+  - name: Install a package
+    package: name={{pkg_name}} state={{state}}
+  - name: Create a file on host server
+    file: path={{file_path}} state=touch
+  - name: Create a user on host server
+    user: name=user1 password={{password}}
+
+Save the file
+
+# ansible-playbook playbook3.yml
+
+
+
 Deploy index.html code on Apache2 server
 
 # vim index.html
