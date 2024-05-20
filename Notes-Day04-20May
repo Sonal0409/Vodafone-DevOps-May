@@ -116,14 +116,11 @@ variables in a file:
 ================================================================
 # vim variables.yml
 
-  pkg_name: php
+pkg_name: php
+state: present
+file_path: /tmp/demo1.txt
+password: user@123
 
-   state: present
-
-   file_path: /tmp/demo1.txt
-
-   file_state: touch
-   password: user@123
 
 save the file
 
