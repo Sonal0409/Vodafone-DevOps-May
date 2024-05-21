@@ -207,7 +207,49 @@ Save the file. (:wq!)
 
 You will see the variable are replaced by there values.
 
+====================================================
 
+tags in Ansible
+
+- hosts: webserver
+  become: true
+  tasks:
+  - name: Execute a command
+    command: hostname -a
+    tags: command
+  - name: execute the command2
+    command: echo "hello"
+    tags: command
+  - name: Install package
+    package: name=apache2 state=present
+    tags: install
+  - name: install package tree
+    package: name=tree state=present
+    tags: install
+  - name: create a  file
+    file: path=/tmp/file state=touch
+    tags: createfile
+  - name: remove a package
+    package: name=tree state=absent
+    tags: uninstall
+
+
+Save the file
+
+ ansible-playbook playbook_tags.yml --tags command
+
+   ansible-playbook playbook_tags.yml --tags command,install
+ 
+   ansible-playbook playbook_tags.yml --skip-tags uninstall
+
+   ansible-playbook playbook_tags.yml --list-tags
+
+
+   ansible-playbook playbook_tags.yml --tags tagged
+
+   ansible-playbook playbook_tags.yml --tags untagged
+
+====================================================================
 
 
 
@@ -363,45 +405,6 @@ vim playbook_jinja.yml
 
 ====================================================================
 
-tags in Ansible
-
-- hosts: webserver
-  become: true
-  tasks:
-  - name: Execute a command
-    command: hostname -a
-    tags: command
-  - name: execute the command2
-    command: echo "hello"
-    tags: command
-  - name: Install package
-    package: name=apache2 state=present
-    tags: install
-  - name: install package tree
-    package: name=tree state=present
-    tags: install
-  - name: create a  file
-    file: path=/tmp/file state=touch
-    tags: createfile
-  - name: remove a package
-    package: name=tree state=absent
-    tags: uninstall
-
-
-Save the file
-
- ansible-playbook playbook_tags.yml --tags command
-
-   ansible-playbook playbook_tags.yml --tags command,install
- 
-   ansible-playbook playbook_tags.yml --skip-tags uninstall
-
-   ansible-playbook playbook_tags.yml --list-tags
-
-
-   ansible-playbook playbook_tags.yml --tags tagged
-
-   ansible-playbook playbook_tags.yml --tags untagged
 
 
 
