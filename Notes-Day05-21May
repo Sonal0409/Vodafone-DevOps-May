@@ -1,0 +1,250 @@
+
+Install ANsible:
+=================
+
+sudo apt-get update
+sudo apt-get install software-properties-common -y
+sudo apt-add-repository --yes --update ppa:ansible/ansible
+sudo apt-get install ansible -y
+ansible --version
+
+
+
+Dynamic Inventory:
+====================
+
+install amazon aws on lab
+
+# ansible-galaxy collection install amazon.aws
+
+Install boto3 and botocore
+
+# sudo apt install python3-pip -y
+
+# pip3 install boto3
+
+Update ansible.cfg file with plugin details
+
+# cd /etc/ansible
+
+# sudo vim ansible.cfg
+
+Insert below text
+
+
+[defaults]
+
+enable_plugins = aws_ec2
+
+Save the file(:wq!)
+
+
+Create the inventory file now:
+
+# sudo vim aws_ec2.yml
+
+Add the below text
+
+plugin: amazon.aws.aws_ec2
+regions:
+ - us-east-1
+
+Save the file (:wq!)
+
+
+
+On the Ansible Lab:
+
+Create access key and secret key and save it as environment variables:
+
+ export AWS_ACCESS_KEY_ID=
+ export AWS_SECRET_ACCESS_KEY=
+
+Now execute the command to list the inventory:
+
+ansible-inventory -i /etc/ansible/aws_ec2.yml --list
+
+You will see the inventory information under 
+
+"aws_ec2": {
+        "hosts": [
+            "ec2-34-227-191-8.compute-1.amazonaws.com",
+            "ec2-52-90-18-208.compute-1.amazonaws.com",
+            "ec2-54-158-3-77.compute-1.amazonaws.com",
+            "ec2-54-196-42-97.compute-1.amazonaws.com",
+            "ec2-54-234-48-31.compute-1.amazonaws.com",
+            "ec2-54-242-128-168.compute-1.amazonaws.com"
+        ]
+    }
+}
+
+===========================
+
+In order to execute any modules on the inventory, we have to do the SSH connection
+
+Take an Ec2 machine and perform the 4 steps of ansiuser creation and ssh connection
+
+# sudo adduser ansiuser
+
+# vim /etc/ssh/sshd_config
+
+# vim /etc/sudoers
+
+# systemctl restart sshd
+
+
+Now go to ACM machine and copy the ssh key and use publci key fo AWS ec2 instance
+
+# ssh-copy-id -i ansiuser@publicipEc2
+
+It will be successfull
+=============================================================
+
+Docker commands:
+==============================================================
+
+
+Run command options in Docker to create a Container:
+==============================================
+
+--name : Give a unique name to the container 
+
+Foreground Mode: (-it)
+=====================
+i : interactive
+t: terminal 
+
+A docker container will created 
+Container will be up & Running
+User will attached to the terminal of the container
+
+# docker run -it --name cont1 ubuntu
+
+Come out of the container & keep container running - Execute on container : CTL pq
+
+Come out of the container & container should be exited - Execute on container: exit 
+
+Go inside the container : attach to its terminal 
+
+# docker attach <containerid>
+
+# exit 
+
+# docker start containername
+
+# docker stop containername 
+
+====================================================
+
+Attach to the terminal of the container from the host machine:
+============================
+
+# docker exec -it <containername> command
+
+# docker exec -it web /bin/bash
+
+
+
+Access app running on the Containers from browser of the machine
+
+
+Port Forwarding OR Port Mapping:
+===================================
+
+By default an application on docker container is avaibale on its exposed port.
+
+It is the users internet that cannot reach the container port
+
+For this we have do port forwarding or mapping in docker
+
+i.e. we have to map a VM free system port with container port
+
+example = 8989:80
+
+systemport:containerport
+
+> If a container is already created, we canot do port forwarding for the container
+
+> port forwarding will be applied at the docker run comamnd itself
+
+> flag for port forwarding (-p)
+
+# docker run --name web1 -d -p 8989:80 nginx
+
+
+> if you want docker to do port mapping then use flag -P
+
+# docker run --name web2 -d -P httpd
+
+=============================================
+
+Docker Compose:
+=======================================
+
+Docker compose is a tool to be installed on Docker host
+
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+docker-compose --version
+
+# mkdir mycomposefile
+# cd mycomposefile
+
+# vim docker-compose.yml
+
+version: '3'
+
+services:
+ db:
+  image: mysql:5.7
+  volumes:
+   - db_data:/var/lib/mysql
+  restart: always
+  environment:
+   MYSQL_ROOT_PASSWORD: password
+   MYSQL_DATABASE: wordpress
+   MYSQL_USER: wordpress
+   MYSQL_PASSWORD: wordpress
+  networks:
+   - wpsite
+ phpmyadmin:
+  depends_on:
+   - db
+  image: phpmyadmin/phpmyadmin
+  restart: always
+  ports:
+   - '8181:80'
+  environment:
+   PMA_HOST: db
+   MYSQL_ROOT_PASSWORD: password
+  networks:
+   - wpsite
+ Wordpress:
+  depends_on:
+   - db
+  image: wordpress
+  ports:
+   - '8000:80'
+  restart: always
+  volumes: ['./:/var/www/html']
+  environment:
+   WORDPRESS_DB_HOST: db:3306
+   WORDPRESS_DB_USER: wordpress
+   WORDPRESS_DB_PASSWORD: wordpress
+   WORDPRESS_DB_NAME: wordpress
+  networks:
+   - wpsite
+networks:
+ wpsite:
+volumes:
+ db_data:
+
+
+
+Save the file (:wq!)
+
+# docker-compose up -d
+
+# docker-compose down
