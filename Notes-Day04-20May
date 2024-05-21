@@ -166,6 +166,30 @@ Ansibel Fact Variables:
 
 # ansible-playbook playbookFacts.yml
 
+=========================================================
+
+Jinja2 template:
+=================================
+
+vim webfile.j2
+
+This is a jinja template
+
+The location of thei file is /etc directory
+
+This file store configuration of a springboot application
+
+This file is created by {{author}}
+
+The host IP is {{ansible_default_ipv4["address"]}}
+
+The nodename is {{ansible_nodename}}
+
+The host OS is {{ansible_os_family}}
+
+Save the file.
+
+
 
 
 
