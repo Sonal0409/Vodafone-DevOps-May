@@ -187,9 +187,25 @@ The nodename is {{ansible_nodename}}
 
 The host OS is {{ansible_os_family}}
 
-Save the file.
+Save the file. (:wq!)
+
+#  vim playbookJinja.yml
+
+- hosts: webserver
+  become: true
+  become_user: root
+  vars:
+   author: AnsibleController
+  tasks:
+  - name: copy the configuration on remote host
+    template: src=webfile.j2 dest=/etc/webfile
 
 
+# ansible-playbook playbookJinja.yml
+
+# cat /etc/webfile
+
+You will see the variable are replaced by there values.
 
 
 
