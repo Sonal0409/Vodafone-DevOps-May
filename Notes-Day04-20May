@@ -362,27 +362,4 @@ Save the file
 
 
 
-Before we begin next playbook, lets look at Setup module and Fact variable:
-===========================================
 
-# ansible webserver -m setup
-It gives lot of information
-
-# ansible webserver -m setup | wc -l
-
-It will return total number of lines
-# ansible webserver -m setup -a "filter=ansible_memfree_mb"
-
-It will return value for given ansible variable.
-# ansible webserver -m setup -a "filter=ansible_mem*"
-
-
-# vim playbookfact.yml
-- hosts: webserver
-  tasks:
-  - name: Show Ipaddress of the host servers
-    debug:
-      msg="The ipaddress of host server  is {{ ansible_default_ipv4.address }}"
-  - name: print variable
-    debug: 
-     var=ansible_default_ipv4.address
