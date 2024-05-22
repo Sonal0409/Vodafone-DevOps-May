@@ -161,6 +161,16 @@ Multi Stage Builds:
 
 # docker build -t imagego .
 
+# docker images 
+
+Remname the files one more time so that we have only 1 dockerfile in the directory
+
+#  mv dockerfile dockerfile-old
+
+# mv Dockerfile-latter Dockerfile
+
+# docker build -t imagego1 .
+
 
 
 
