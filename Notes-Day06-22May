@@ -144,6 +144,33 @@ Copy the port number
 
 go to browser and check : localhost:<portnumber>
 
+================================================================================
+
+Multi Stage Builds:
+=================================================================================
+
+# git clone https://github.com/Sonal0409/multistagebuild-GoLang.git
+
+# cd multistagebuild-GoLang
+
+# ls
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
