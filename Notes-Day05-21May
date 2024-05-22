@@ -163,10 +163,10 @@ Attach to the terminal of the container from the host machine:
 
 # docker exec -it web /bin/bash
 
+Give exit to comout of the process.
 
 
 Access app running on the Containers from browser of the machine
-
 
 Port Forwarding OR Port Mapping:
 ===================================
