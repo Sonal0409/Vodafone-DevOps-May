@@ -1,4 +1,103 @@
+Create Docker Images 
+================================================
 
+1. We can commit a container into an Image 
+
+# docker run -it --name cont01 ubuntu
+
+In the container execute below commands:
+
+    > apt-get update 
+    > apt-get install curl -y
+
+Come out of container  (CTL pq)
+
+# docker commit cont01 image01
+
+
+2. Push your custom image to docker Registry 
+
+      > We have to change the name of the Image, so that it can be pushed to our repository on docker hub 
+        # docker tag image01 sonal04/image01
+
+      # docker login 
+      give dockerhub login
+          dockerhub password
+          
+      # docker push sonal04/image01
+
+
+==================================================================
+
+Creating an Image from Dockerfile
+=================================================
+
+A dockerfile consist of following keywords
+
+1. FROM -> 
+Dockerfile starts with FROM keyword 
+Dockerfile will consist of only 1 FROM keyword
+FROM keyword defines the name of the Base Image
+Most of custom images are always based upon Docker Base Image 
+
+2. RUN -> 
+With this keyword we can run linux commands to install, upgrade or delete packages 
+Any linux command to be executed on the container, we can give with this keyword 
+We can have run keyword many time in the dockerfile 
+
+3. ENV -> We can provide environment variables that can be used in the dockerfile 
+
+4. LABEL  -> Give maintainer information about the Dockerfile
+
+5.COPY  ->
+This keyword is used to copy a file from docker host machine to the containers directory 
+It cannot copy tar files
+
+6. ADD ->
+This keyword is used to copy a file from docker host machine to the containers directory 
+It can also copy tar files
+
+7. EXPOSE -> Expose the container to a port number 
+
+9.CMD
+with this keyword we will give commands like to start an application or run a script
+This command coming from the image on the container can be replaced by a new command that is passed by the user at runtime
+
+10.ENTRYPOINT
+with this keyword we will give commands like to start an application or run a script
+
+11. WORKDIR
+TO create a directory in which the commands will be executed
+
+12. VOLUME : to attach default storage to container
+
+=============================
+FROM DOCUMENTATION:
+=============================
+
+Instruction	Description
+ADD	Add local or remote files and directories.
+ARG	Use build-time variables.
+CMD	Specify default commands.
+COPY	Copy files and directories.
+ENTRYPOINT	Specify default executable.
+ENV	Set environment variables.
+EXPOSE	Describe which ports your application is listening on.
+FROM	Create a new build stage from a base image.
+HEALTHCHECK	Check a container's health on startup.
+LABEL	Add metadata to an image.
+MAINTAINER	Specify the author of an image.
+ONBUILD	Specify instructions for when the image is used in a build.
+RUN	Execute build commands.
+SHELL	Set the default shell of an image.
+STOPSIGNAL	Specify the system call signal for exiting a container.
+USER	Set user and group ID.
+VOLUME	Create volume mounts.
+WORKDIR	Change working directory.
+
+
+
+=============================================
 
 # mkdir mydockerfile
 # cd mydockerfile
