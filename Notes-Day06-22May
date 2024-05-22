@@ -207,6 +207,21 @@ stages{
   }
   }
 
+stage('Build Dockerfile '){
+
+steps{
+      sh 'cp /var/lib/jenkins/workspace/DockerPipeline/target/addressbook.war .'
+      sh 'docker build -t addressbookimage .'
+}
+}
+
+stage('Deploy to container'){
+
+steps{
+   sh 'docker run -d -P addressbookimage'
+}
+
+}
 }
 
 }
@@ -216,6 +231,77 @@ Save the job --> run it
 Click on build number --> get the console output --> scroll to the bottom and copy the Building war path: /var/lib/jenkins/workspace/DockerPipeline/target/addressbook.war
 
 which will be /var/lib/jenkins/workspace/DockerPipeline/target/addressbook.war
+
+
+
+Here is the complete pipeline code:
+
+pipeline{
+
+agent any
+
+tools{
+maven 'mymaven'
+}
+
+stages{
+  stage('Checkout Code')
+  {
+  steps{
+  git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+  }
+  
+  }
+
+  stage('Build the Artifact')
+  {
+  steps{
+    sh 'mvn package'
+  }
+  }
+
+stage('Build Dockerfile '){
+
+steps{
+      sh 'cp /var/lib/jenkins/workspace/DockerPipeline/target/addressbook.war .'
+      sh 'docker build -t addressbookimage .'
+}
+}
+
+stage('Deploy to container'){
+
+steps{
+   sh 'docker run -d -P addressbookimage'
+}
+
+}
+}
+
+}
+
+Save the Job.
+
+
+By default jenkins doesnot ahve permission to run docker command
+
+execute the below command for any user to run docker:
+
+# chmod 777 /var/run/docker.sock
+
+
+Now go and run the pipeline
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
