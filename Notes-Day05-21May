@@ -134,6 +134,26 @@ Go inside the container : attach to its terminal
 
 # docker stop containername 
 
+
+Detached MODE:
+========================
+
+# Container will be created
+
+# container will be running
+
+# user will still be attached to the terminal fo the VM , Container will run in background mode
+
+# docker run -d --name web nginx
+# docker ps -a
+
+
+
+
+
+
+
+
 ====================================================
 
 Attach to the terminal of the container from the host machine:
