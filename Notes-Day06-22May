@@ -173,6 +173,51 @@ Remname the files one more time so that we have only 1 dockerfile in the directo
 
 
 
+===================================================
+
+jenkisn Docker pipeline:
+==================================================
+
+Create a new Job --> give name DockerPipeline --> select pipeline template
+
+click on configure
+
+
+pipeline{
+
+agent any
+
+tools{
+maven 'mymaven'
+}
+
+stages{
+  stage('Checkout Code')
+  {
+  steps{
+  git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+  }
+  
+  }
+
+  stage('Build the Artifact')
+  {
+  steps{
+    sh 'mvn package'
+  }
+  }
+
+}
+
+}
+
+
+Save the job --> run it
+Click on build number --> get the console output --> scroll to the bottom and copy the Building war path: /var/lib/jenkins/workspace/DockerPipeline/target/addressbook.war
+
+which will be /var/lib/jenkins/workspace/DockerPipeline/target/addressbook.war
+
+
 
 
 
