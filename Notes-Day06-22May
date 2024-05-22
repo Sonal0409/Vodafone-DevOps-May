@@ -155,6 +155,12 @@ Multi Stage Builds:
 
 # ls
 
+# mv nomultistagedockerfile dockerfile
+
+# mv Dockerfile Dockerfile-latter
+
+# docker build -t imagego .
+
 
 
 
