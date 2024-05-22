@@ -34,7 +34,16 @@ here:
 . : meanse take the dockerfile form current directory
 t : tag the image with a name
 
+RUN the custom Image:
+======================
 
+# docker run -d -P mybaseimage01
+
+# docker ps -a
+
+Copy the port number
+
+go to browser and check : localhost:<portnumber>
 
 
 
