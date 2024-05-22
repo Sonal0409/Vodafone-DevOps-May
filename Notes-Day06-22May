@@ -1,0 +1,49 @@
+
+
+# mkdir mydockerfile
+# cd mydockerfile
+# vim dockerfile
+
+# This is out first dockerfile
+# write comments in the begining
+
+FROM ubuntu
+LABEL maintainer="Docker"
+ENV pkg_name nginx
+RUN apt-get update
+RUN apt-get install $pkg_name -y
+COPY index.html /var/www/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+
+
+Save the file.
+
+
+# vim index.html
+
+<h1> This file is from docker </h1>
+
+Save the file
+
+
+# docker build  -t mybaseimage01 .
+
+
+here: 
+. : meanse take the dockerfile form current directory
+t : tag the image with a name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
