@@ -220,7 +220,7 @@ spec:
     port: 80  # this is service port
 
 
-# kubectlc reate -f service-np.yml
+# kubectl create -f service-np.yml
 
 go to browser of the lab
 
