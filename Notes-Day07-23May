@@ -99,6 +99,46 @@ spec:
 
 # kubectl describe pod pod2
 
+==============================================
+
+Deployment in kubernetes:
+==============================================
+
+# vim deployment.yml
+
+kind: Deployment 
+apiVersion: apps/v1
+metadata:
+ name: mydeploy
+spec:
+ replicas: 5
+ selector:
+  matchLabels:
+   type: webserver
+ template:   # template here is pod template using which kubernetes will create the replicas
+  metadata:
+    labels:
+     type: webserver
+  spec:
+   containers:
+    - name: c1
+      image: nginx
+
+
+
+# kubectl create -f deployment.yml
+
+# kubectl get all
+
+# kubectl scale deployment mydeploy --replicas = 10
+
+# kubectl scale deployment mydeploy --replicas = 5
+
+
+
+
+
+
 
 
 
