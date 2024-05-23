@@ -156,6 +156,27 @@ spec:
 
 # kubectl get pods -o wide
 
+# vim service-nginx.yml
+
+kind: Service
+apiVersion: v1
+metadata:
+ name: mysvc
+spec:
+ type: ClusterIP
+ selector:
+   type: webserver
+ ports:
+  - targetPort: 80  # its container port
+    port: 80  # this is service port
+
+
+# kubectl create -f service-nginx.yml
+
+# kubectl get svc
+
+# kubectl get endpoints
+
 
 
 
