@@ -201,6 +201,30 @@ spec:
 # curl mysvc
 
 
+Service - NodePort
+
+# vim service-np.yml
+
+kind: Service
+apiVersion: v1
+metadata:
+ name: mysvc
+spec:
+ type: ClusterIP
+ selector:
+   type: webserver
+ ports:
+  - targetPort: 80  # its container port
+    port: 80  # this is service port
+
+
+# kubectlc reate -f service-np.yml
+
+go to browser of the lab
+
+localhost:nodeportnumber
+
+
 
 
 
