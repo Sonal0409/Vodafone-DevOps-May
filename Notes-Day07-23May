@@ -135,6 +135,31 @@ spec:
 # kubectl scale deployment mydeploy --replicas = 5
 
 
+=====================================================
+
+Service - ClusterIP
+
+# vim pod-nginx.yml
+
+apiVersion: v1
+kind: Pod
+metadata:
+ name: pod1
+ labels:
+  type: webserver
+spec:
+ containers:
+  - name: c1
+    image: nginx
+
+# kubectl create -f pod-nginx.yml
+
+# kubectl get pods -o wide
+
+
+
+
+
 
 
 
