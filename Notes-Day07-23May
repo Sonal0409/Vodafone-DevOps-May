@@ -194,7 +194,7 @@ spec:
     command: [/bin/bash, -c, sleep 6000]
 
 
-# kubeclt create -f test-pod.yml
+# kubectl create -f test-pod.yml
 
 # kubectl exec -it test-pod -- /bin/bash
 
