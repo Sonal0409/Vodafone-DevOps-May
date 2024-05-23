@@ -177,6 +177,39 @@ spec:
 
 # kubectl get endpoints
 
+Create the test pod:
+
+# vim test-pod.yml
+
+apiVersion: v1
+kind: Pod
+metadata:
+ name: test-pod
+ labels:
+  type: test
+spec:
+ containers:
+  - name: c1
+    image: ubuntu
+    command: [/bin/bash, -c, sleep 6000]
+
+
+# kubeclt create -f test-pod.yml
+
+# kubectl exec -it test-pod -- /bin/bash
+
+# curl mysvc
+
+
+
+
+
+
+
+
+
+
+
 
 
 
