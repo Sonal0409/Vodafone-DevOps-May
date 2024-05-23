@@ -210,7 +210,7 @@ Service - NodePort
 kind: Service
 apiVersion: v1
 metadata:
- name: mysvc
+ name: mysvc-np
 spec:
  type: NodePort
  selector:
