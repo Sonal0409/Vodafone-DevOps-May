@@ -1,0 +1,70 @@
+Installation of Kubernetes on the Lab:
+===================================================
+Step 1:
+
+### INSTALL/Upgrade DOCKER 
+
+# sudo su -
+# sudo apt-get update
+# sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get update ; clear
+sudo apt-get install -y docker-ce
+
+sudo vi /etc/docker/daemon.json
+
+Press i and insert below content
+
+{
+	"exec-opts": ["native.cgroupdriver=systemd"]
+}
+
+Save the file. (:wq!)
+
+sudo service docker restart
+
+
+
+Step 2: 
+
+### INSTALL KUBEADM,KUBELET,KUBECTL
+
+
+echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo apt-get update ; clear
+sudo apt-get install -y kubelet kubeadm kubectl	
+
+Step3: 
+
+##### Initiate Kube cluster
+
+sudo kubeadm init --ignore-preflight-errors=all
+
+Step 4:
+
+#### Setup the environment Variables
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+
+Step 5:
+## set up the  Calico network
+
+sudo kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.24.1/manifests/calico.yaml
+
+
+Step 6:
+
+#### check if Kube Master is ready or not
+
+# kubectl get nodes
+
+REMOVE THE TAINT ON THE NODE:
+======================================
+
+# kubectl taint node ip-172-31-25-55  node-role.kubernetes.io/master:NoSchedule-
