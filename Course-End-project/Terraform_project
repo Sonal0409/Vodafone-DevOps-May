@@ -200,6 +200,8 @@ Save the file
 
 Enter value : yes
 
+Open the file again and add below code
+
 resource "tls_private_key" "web-key" {
   algorithm = "RSA"
 }
