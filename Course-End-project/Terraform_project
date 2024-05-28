@@ -115,7 +115,45 @@ when asked for approval give yes
 you will vpc and subnet created on AWS
 
 
+Open the code file again and add below code
 
+# vim awsinfra.tf
+
+
+resource "aws_route_table" "sl-route-table" {
+  vpc_id = aws_vpc.sl-vpc.id
+  tags = {
+    Name = "sl-route-table"
+}
+}
+
+resource "aws_route_table_association" "a" {
+  subnet_id      = aws_subnet.subnet-1.id
+  route_table_id = aws_route_table.sl-route-table.id
+}
+
+
+resource "aws_internet_gateway" "gw" {
+  vpc_id = aws_vpc.sl-vpc.id
+  depends_on = [aws_vpc.sl-vpc]
+  tags = {
+    Name = "sl-gw"
+  }
+}
+
+resource "aws_route" "sl-route" {
+  route_table_id            = aws_route_table.sl-route-table.id
+  destination_cidr_block    = "0.0.0.0/0"
+  gateway_id = aws_internet_gateway.gw.id
+}
+
+
+
+save the file
+
+# terraform apply
+
+Enter value : yes
 
 
 
