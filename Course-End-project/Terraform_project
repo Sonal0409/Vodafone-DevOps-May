@@ -156,6 +156,50 @@ save the file
 Enter value : yes
 
 
+Open the file and add below code
+
+# vim awsinfra.tf
+
+
+variable "sg_ports" {
+
+type = list(number)
+
+default = [22,80]
+
+}
+
+
+resource "aws_security_group" "sl-sg" {
+  name   = "sl-sg1"
+  vpc_id = aws_vpc.sl-vpc.id
+    dynamic "ingress" {
+    for_each = var.sg_ports
+    iterator = port
+   content{
+   from_port = port.value
+   to_port = port.value
+   protocol = "tcp"
+   cidr_blocks = ["0.0.0.0/0"]
+}
+}
+egress {
+from_port = 0
+to_port = 0
+protocol = "-1"
+cidr_blocks = ["0.0.0.0/0"]
+
+}
+
+}
+
+
+Save the file
+
+
+
+
+
 
 
 
