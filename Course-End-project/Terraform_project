@@ -200,7 +200,32 @@ Save the file
 
 Enter value : yes
 
+resource "tls_private_key" "web-key" {
+  algorithm = "RSA"
+}
 
+# send the public key to AWS
+
+resource "aws_key_pair" "app-key" {
+  key_name   = "web-key"
+  public_key = tls_private_key.web-key.public_key_openssh
+
+}
+
+# copy the private key in current directory
+
+resource "local_file" "web-key" {
+filename = "web-key.pem"
+content = tls_private_key.web-key.private_key_pem
+
+}
+
+
+Save the file
+
+# terraform init -upgrade
+
+# terraform apply
 
 
 
