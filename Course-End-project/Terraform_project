@@ -196,7 +196,9 @@ cidr_blocks = ["0.0.0.0/0"]
 
 Save the file
 
+# terraform apply
 
+Enter value : yes
 
 
 
