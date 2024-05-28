@@ -74,3 +74,50 @@ provider "aws" {
 Save the file and we will install aws provider plugin
 
 # terraform init
+
+
+
+Open the code file:
+
+# vim awsinfra.tf
+
+
+Add this code below the provider block
+
+
+resource "aws_vpc" "sl-vpc" {
+  cidr_block       = "10.0.0.0/16"
+ 
+  tags = {
+    Name = "sl-vpc"
+  }
+}
+
+resource "aws_subnet" "subnet-1" {
+  vpc_id     = aws_vpc.sl-vpc.id
+  cidr_block = "10.0.1.0/24"
+  map_public_ip_on_launch = true
+  depends_on = [aws_vpc.sl-vpc]
+  tags = {
+    Name = "sl-subnet"
+  }
+}
+
+
+Save the file
+
+# terraform validate
+
+# terraform apply
+
+when asked for approval give yes
+
+you will vpc and subnet created on AWS
+
+
+
+
+
+
+
+
