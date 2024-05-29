@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: mysql
+spec:
+ replicas: 1
+ selector:
+  matchLabels:
+   app: mysql-wordpress
+ template:
+  metadata:
+   labels:
+    app: mysql-wordpress
+    product: mysql
+  spec:
+   containers:
+     - name: mysql-container
+       image: mysql
+       env:
+       - name: MYSQL_ROOT_PASSWORD
+         value: password
+       - name: MYSQL_DATABASE
+         value: wordpress
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: mysql
+spec:
+ type: ClusterIP
+ ports:
+  - targetPort: 3306
+    port: 3306
+ selector:
+  app: mysql-wordpress
+  product: mysql
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: wordpress
+spec:
+ replicas: 1
+ selector:
+  matchLabels:
+   app: mysql-wordpress
+   tier: frontend
+ template:
+  metadata:
+   labels:
+    app: mysql-wordpress
+    tier: frontend
+  spec:
+   containers:
+    - name: wordpress-container
+      image: wordpress
+      env:
+      - name: WORDPRESS_DB_HOST
+        value: mysql
+      - name: WORDPRESS_DB_USER
+        value: root
+      - name: WORDPRESS_DB_PASSWORD
+        value: password
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: wordpress
+spec:
+ type: NodePort
+ ports:
+  - targetPort: 80
+    port: 80
+ selector:
+  app: mysql-wordpress
+  tier: frontend
