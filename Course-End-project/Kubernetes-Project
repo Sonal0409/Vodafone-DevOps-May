@@ -51,6 +51,8 @@ Save the file
 
 # kubectl create -f deployment-mysql.yml
 
+# kubectl get all
+
 If you wish to check the wordpressDB in the mysql pod
 
 
