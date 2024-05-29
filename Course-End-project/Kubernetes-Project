@@ -153,6 +153,51 @@ give exit to come out of DB
 give exit to comeout of container
 
 
+
+=======================================
+RUnning jenkins pipeline code to deploy kubernetes deployment
+========================================
+
+Continous Integration With Jenkins
+===========================================
+
+Demo 1: Remove Current version of Jenkins from lab and upgrade to new version of jenkins
+
+sudo service jenkins stop
+
+sudo apt-get remove --purge jenkins
+
+sudo apt-get autoremove jenkins
+
+Install Jenkins:
+==============================
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+
+ echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+sudo apt-get update
+
+sudo apt-get install jenkins
+
+Go to browser:
+
+localhost:8080
+
+Go to the terminal and execute below command:
+
+cat /var/lib/jenkins/secrets/initialAdminPassword
+
+Select -> Install suggested Plugins
+
+Give the username as admin and password at admin
+
+You will be on the dashboard
+-----------------------------------------------------------------
+
+
+
+
+
 Open the File
 
 # vim /etc/sudoers
