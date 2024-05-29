@@ -69,6 +69,90 @@ give exit to come out of DB
 give exit to comeout of container
 
 
+# vim deploy-wordpress.yml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: wordpress
+spec:
+ replicas: 1
+ selector:
+  matchLabels:
+   app: mysql-wordpress
+   tier: frontend
+ template:
+  metadata:
+   labels:
+    app: mysql-wordpress
+    tier: frontend
+  spec:
+   containers:
+    - name: wordpress-container
+      image: wordpress
+      env:
+      - name: WORDPRESS_DB_HOST
+        value: mysql
+      - name: WORDPRESS_DB_USER
+        value: root
+      - name: WORDPRESS_DB_PASSWORD
+        value: password
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: wordpress
+spec:
+ type: NodePort
+ ports:
+  - targetPort: 80
+    port: 80
+ selector:
+  app: mysql-wordpress
+  tier: frontend
+
+
+# kubectl create -f deploy-wordpress.yml
+
+# kubectl get all
+
+copy the nodeport given in 5 digits
+
+open the browser
+
+give the URL :  localhost:<giveyourNodePort>
+
+
+Yoyu will see wordpress
+
+enter the details as shown on the page.
+
+Now go back to the terminal and log into mysql pod
+
+# kubectl exec -it <mysql-podname> -- bash
+
+# mysql -u root -ppassword
+
+# show databases;
+
+# use wordpress;
+
+# show tables;
+
+# select * from wp_users;
+
+You will see entry of your users
+
+
+
+you will see wordpress DB in it
+
+give exit to come out of DB
+
+give exit to comeout of container
+
+
 
 
 
