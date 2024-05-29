@@ -153,6 +153,57 @@ give exit to come out of DB
 give exit to comeout of container
 
 
+Open the File
+
+# vim /etc/sudoers
+
+Scroll down to below section
+
+# User privilege specification
+root    ALL=(ALL:ALL) ALL
+
+And make this entry
+
+jenkins ALL=NOPASSWD: ALL
+
+
+
+Save the file carefully
+
+
+Go to jenkins URL on your browser-->  Create a Job --> Select pipeline
+
+Click on pipeline and write the below pipeline
+
+
+pipeline{
+    
+    agent any
+    
+    stages{
+        
+        stage('Deploy WordpressApp')
+        {
+            steps{
+                sh 'sudo kubectl create -f https://raw.githubusercontent.com/Sonal0409/Vodafone-DevOps-May/main/Course-End-project/kube-project.yml'
+            }
+        }
+    }
+    
+}
+
+
+Save the file and run
+
+
+
+
+
+
+
+
+
+
 
 
 
